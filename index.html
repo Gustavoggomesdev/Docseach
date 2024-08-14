@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Subpastas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Cor de fundo clara */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff; /* Cor de fundo do formulário */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px; /* Aumentado o padding para mais espaço interno */
+            max-width: 800px; /* Aumentado o max-width para uma caixa maior */
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto; /* Adiciona rolagem horizontal se necessário */
+        }
+        h1 {
+            margin-top: 0;
+            color: #333;
+            text-align: center; /* Centralizar o título */
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 16px; /* Aumentado o tamanho da fonte do rótulo */
+        }
+        input[type="text"] {
+            padding: 12px; /* Aumentado o padding para mais espaço dentro do input */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px; /* Aumentado o espaçamento inferior */
+            font-size: 16px; /* Aumentado o tamanho da fonte do input */
+        }
+        button {
+            padding: 12px; /* Aumentado o padding para o botão */
+            background-color: #007bff; /* Cor do botão */
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3; /* Cor do botão ao passar o mouse */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            display: block; /* Faz a tabela se comportar como um bloco para aplicar rolagem */
+            overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+            max-height: 400px; /* Define uma altura máxima para a rolagem */
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            overflow: hidden; /* Oculta o texto que excede a largura da célula */
+            text-overflow: ellipsis; /* Adiciona "..." ao texto que não cabe na célula */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Aplicar nowrap somente à coluna de data */
+        td.date-column {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pesquisa de Processos</h1>
+        <form method="post">
+            <label for="nome_subpasta">Nome do Processo:</label>
+            <input type="text" id="nome_subpasta" name="nome_subpasta" placeholder="Digite o nome do processo">
+            <button type="submit">Pesquisar</button>
+        </form>
+        {% if resultados %}
+            <h2>Resultados:</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Caminho</th>
+                    <th>Data de Criação</th>
+                </tr>
+                {% for resultado in resultados %}
+                    <tr>
+                        <td>{{ resultado[0] }}</td>
+                        <td>{{ resultado[1] }}</td>
+                        <td>{{ resultado[2] }}</td>
+                        <td class="date-column">{{ resultado[3] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
