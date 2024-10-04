@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa de Subpastas</title>
+    <title>Pesquisa de Processos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4; /* Cor de fundo clara */
+            background-color: #f4f4f4; 
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,19 +16,19 @@
             height: 100vh;
         }
         .container {
-            background-color: #ffffff; /* Cor de fundo do formulário */
+            background-color: #ffffff; 
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 30px; /* Aumentado o padding para mais espaço interno */
-            max-width: 800px; /* Aumentado o max-width para uma caixa maior */
+            padding: 30px;
+            max-width: 800px; 
             width: 100%;
             box-sizing: border-box;
-            overflow-x: auto; /* Adiciona rolagem horizontal se necessário */
+            overflow: hidden; 
         }
         h1 {
             margin-top: 0;
             color: #333;
-            text-align: center; /* Centralizar o título */
+            text-align: center; 
         }
         form {
             display: flex;
@@ -37,18 +37,18 @@
         label {
             margin-bottom: 10px;
             color: #555;
-            font-size: 16px; /* Aumentado o tamanho da fonte do rótulo */
+            font-size: 16px; 
         }
         input[type="text"] {
-            padding: 12px; /* Aumentado o padding para mais espaço dentro do input */
+            padding: 12px; 
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-bottom: 20px; /* Aumentado o espaçamento inferior */
-            font-size: 16px; /* Aumentado o tamanho da fonte do input */
+            margin-bottom: 20px; 
+            font-size: 16px;
         }
         button {
-            padding: 12px; /* Aumentado o padding para o botão */
-            background-color: #007bff; /* Cor do botão */
+            padding: 12px; 
+            background-color: #007bff; 
             border: none;
             border-radius: 4px;
             color: white;
@@ -57,15 +57,13 @@
             transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #0056b3; /* Cor do botão ao passar o mouse */
+            background-color: #0056b3; 
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            display: block; /* Faz a tabela se comportar como um bloco para aplicar rolagem */
-            overflow-y: auto; /* Adiciona rolagem vertical se necessário */
-            max-height: 400px; /* Define uma altura máxima para a rolagem */
+            overflow-x: auto; 
         }
         table, th, td {
             border: 1px solid #ddd;
@@ -73,45 +71,99 @@
         th, td {
             padding: 10px;
             text-align: left;
-            overflow: hidden; /* Oculta o texto que excede a largura da célula */
-            text-overflow: ellipsis; /* Adiciona "..." ao texto que não cabe na célula */
+            overflow: hidden; 
+            text-overflow: ellipsis; 
         }
         th {
             background-color: #f2f2f2;
         }
-        /* Aplicar nowrap somente à coluna de data */
+        
         td.date-column {
             white-space: nowrap;
+        }
+        .scrollable-table-container {
+            max-height: 400px; 
+            overflow-y: auto; 
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .mensagem-erro {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <div align="right" style="position: fixed; bottom: 0; right: 0; padding: 10px;">
+        &copy; <span id="year"></span> by Gustavo.
+    </div>
+
+    <script>
+        
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
     <div class="container">
         <h1>Pesquisa de Processos</h1>
         <form method="post">
             <label for="nome_subpasta">Nome do Processo:</label>
             <input type="text" id="nome_subpasta" name="nome_subpasta" placeholder="Digite o nome do processo">
+            
+            
+            <label for="tabela_subpastas">
+                <input type="radio" id="tabela_subpastas" name="tabela" value="subpastas" {% if tabela == 'subpastas' %}checked{% endif %}>
+                DETRAN
+            </label>
+            <label for="tabela_agetos">
+                <input type="radio" id="tabela_agetos" name="tabela" value="agetos" {% if tabela == 'agetos' %}checked{% endif %}>
+                AGETO
+            </label>
+            
             <button type="submit">Pesquisar</button>
         </form>
+
+        {% if mensagem_erro %}
+        <div id="mensagem-erro" class="mensagem-erro">
+            {{ mensagem_erro }}
+        </div>
+        {% endif %}
+        {% if error_message %}
+            <div class="error">{{ error_message }}</div>
+        {% endif %}
         {% if resultados %}
             <h2>Resultados:</h2>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Caminho</th>
-                    <th>Data de Criação</th>
-                </tr>
-                {% for resultado in resultados %}
+            <div class="scrollable-table-container">
+                <table>
                     <tr>
-                        <td>{{ resultado[0] }}</td>
-                        <td>{{ resultado[1] }}</td>
-                        <td>{{ resultado[2] }}</td>
-                        <td class="date-column">{{ resultado[3] }}</td>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Caminho</th>
+                        <th>Data de Criação</th>
                     </tr>
-                {% endfor %}
-            </table>
+                    {% for resultado in resultados %}
+                        <tr>
+                            <td>{{ resultado[0] }}</td>
+                            <td>{{ resultado[1] }}</td>
+                            <td>{{ resultado[2] }}</td>
+                            <td class="date-column">{{ resultado[3] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         {% endif %}
     </div>
+    <script>
+        
+        window.onload = function() {
+            var mensagemErro = document.getElementById("mensagem-erro");
+            if (mensagemErro) {
+                setTimeout(function() {
+                    mensagemErro.style.display = 'none';
+                }, 3000);  
+            }
+        };
+    </script>
 </body>
 </html>
