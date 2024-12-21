@@ -3,7 +3,7 @@ import mysql.connector
 
 app = Flask(__name__)
 
-
+# Configuração do banco de dados
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -16,24 +16,38 @@ cursor = conn.cursor()
 def index():
     resultados = []
     mensagem_erro = None
-    tabela = 'subpastas'  
-    if request.method == 'POST':
-        nome_subpasta = request.form['nome_subpasta']
-        tabela = request.form['tabela']  
-        
-        query = f"""
-        SELECT id, nome, caminho, data_criacao 
-        FROM {tabela} 
-        WHERE nome LIKE %s
-        """
-        like_pattern = f"%{nome_subpasta}%"
-        cursor.execute(query, (like_pattern,))
-        resultados = cursor.fetchall()
+    tabela = 'subpastas'  # Tabela padrão para "DETRAN"
 
-        if not resultados:
-            mensagem_erro = "Nenhum resultado encontrado para a pesquisa."
-    
-    return render_template('index.html', resultados=resultados, tabela=tabela, mensagem_erro=mensagem_erro)
+    if request.method == 'POST':
+        nome_subpasta = request.form.get('nome_subpasta', '').strip()
+        tabela = request.form.get('tabela', 'subpastas')  # Obtém a tabela selecionada no formulário
+
+        if not nome_subpasta:
+            mensagem_erro = "Por favor, insira o nome do processo para pesquisar."
+        else:
+            try:
+                like_pattern = f"%{nome_subpasta}%"
+                
+                # Query dinâmica baseada na tabela selecionada
+                query = f"""
+                SELECT id, nome, caminho, data_criacao 
+                FROM {tabela} 
+                WHERE nome LIKE %s
+                """
+                cursor.execute(query, (like_pattern,))
+                resultados = cursor.fetchall()
+
+                if not resultados:
+                    mensagem_erro = "Nenhum resultado encontrado para a pesquisa."
+            except mysql.connector.Error as err:
+                mensagem_erro = f"Erro ao acessar o banco de dados: {err}"
+
+    return render_template(
+        'index.html',
+        resultados=resultados,
+        tabela=tabela,
+        mensagem_erro=mensagem_erro
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
