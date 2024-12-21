@@ -3,7 +3,7 @@ import mysql.connector
 
 app = Flask(__name__)
 
-# Configuração do banco de dados
+
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -16,11 +16,11 @@ cursor = conn.cursor()
 def index():
     resultados = []
     mensagem_erro = None
-    tabela = 'subpastas'  # Tabela padrão para "DETRAN"
+    tabela = 'subpastas' 
 
     if request.method == 'POST':
         nome_subpasta = request.form.get('nome_subpasta', '').strip()
-        tabela = request.form.get('tabela', 'subpastas')  # Obtém a tabela selecionada no formulário
+        tabela = request.form.get('tabela', 'subpastas')  
 
         if not nome_subpasta:
             mensagem_erro = "Por favor, insira o nome do processo para pesquisar."
@@ -28,7 +28,7 @@ def index():
             try:
                 like_pattern = f"%{nome_subpasta}%"
                 
-                # Query dinâmica baseada na tabela selecionada
+              
                 query = f"""
                 SELECT id, nome, caminho, data_criacao 
                 FROM {tabela} 
