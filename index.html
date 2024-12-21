@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon"  href="images/favicon.ico" type="image/x-ico">
     <title>Pesquisa de Processos</title>
     <style>
         body {
@@ -98,11 +99,10 @@
 </head>
 <body>
     <div align="right" style="position: fixed; bottom: 0; right: 0; padding: 10px;">
-        &copy; <span id="year"></span> by Gustavo.
+        &copy; <span id="year"></span>.
     </div>
 
     <script>
-        
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
     <div class="container">
@@ -111,7 +111,7 @@
             <label for="nome_subpasta">Nome do Processo:</label>
             <input type="text" id="nome_subpasta" name="nome_subpasta" placeholder="Digite o nome do processo">
             
-            
+            <!-- Opções de tabelas -->
             <label for="tabela_subpastas">
                 <input type="radio" id="tabela_subpastas" name="tabela" value="subpastas" {% if tabela == 'subpastas' %}checked{% endif %}>
                 DETRAN
@@ -120,6 +120,12 @@
                 <input type="radio" id="tabela_agetos" name="tabela" value="agetos" {% if tabela == 'agetos' %}checked{% endif %}>
                 AGETO
             </label>
+            <label for="tabela_arquivos_pdf">
+                <input type="radio" id="tabela_arquivos_pdf" name="tabela" value="arquivos_pdf" {% if tabela == 'arquivos_pdf' %}checked{% endif %}>
+                CONTROLADOS
+            </label>
+
+            
             
             <button type="submit">Pesquisar</button>
         </form>
@@ -155,7 +161,6 @@
         {% endif %}
     </div>
     <script>
-        
         window.onload = function() {
             var mensagemErro = document.getElementById("mensagem-erro");
             if (mensagemErro) {
