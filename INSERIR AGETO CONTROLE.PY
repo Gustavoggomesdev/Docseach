@@ -13,8 +13,8 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # Caminho raiz e profundidade máxima
-caminho_raiz = r'Z:/DETRAN - TO 03/CONTROLADAS'
-profundidade_maxima_desejada = 3
+caminho_raiz = r'X:\AGETO\BatchesPro\AGETO PASSIVO'
+profundidade_maxima_desejada = 2
 
 # Carrega todos os caminhos existentes para evitar SELECT por arquivo
 cursor.execute("SELECT caminho FROM arquivos_pdf")

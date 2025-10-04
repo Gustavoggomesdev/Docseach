@@ -13,11 +13,11 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 # Caminho raiz e profundidade máxima
-caminho_raiz = r'Z:/DETRAN - TO 03/CONTROLADAS'
-profundidade_maxima_desejada = 3
+caminho_raiz = r'B:\AGETO\BatchesPro\AGETO INDEX'
+profundidade_maxima_desejada = 2
 
 # Carrega todos os caminhos existentes para evitar SELECT por arquivo
-cursor.execute("SELECT caminho FROM arquivos_pdf")
+cursor.execute("SELECT caminho FROM agetos")
 caminhos_existentes = set(c[0] for c in cursor.fetchall())
 
 contador = 0
@@ -28,7 +28,7 @@ def inserir_dados(nome, caminho, data_criacao):
     if caminho not in caminhos_existentes:
         try:
             cursor.execute(
-                "INSERT INTO arquivos_pdf (nome, caminho, data_criacao, processado) VALUES (%s,%s,%s,%s)",
+                "INSERT INTO agetos (nome, caminho, data_criacao, processado) VALUES (%s,%s,%s,%s)",
                 (nome, caminho, data_criacao, True)
             )
             caminhos_existentes.add(caminho)
